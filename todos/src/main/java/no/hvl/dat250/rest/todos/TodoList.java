@@ -20,13 +20,13 @@ public class TodoList {
 
     public Todo getTodo (String id) {
         for (Todo t : list) {
-            if (t.getId().equals(Long.parseLong(id)))
+            if (t.getId().equals(Integer.parseInt(id)))
                 return t;
         }
         return null;
     }
 
-    public void deleteTodo (Long id) {
+    public void deleteTodo (Integer id) {
         list.removeIf(t -> t.getId().equals(id));
     }
 

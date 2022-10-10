@@ -1,17 +1,16 @@
 package no.hvl.dat250.rest.todos;
 
 import java.util.Objects;
-import java.util.UUID;
 import java.util.Random;
 
 import com.google.gson.Gson;
 
 public class Todo {
-    private final Long id;
+    private final Integer id;
     private final String summary;
     private final String description;
 
-    public Todo(Long id, String summary, String description) {
+    public Todo(Integer id, String summary, String description) {
         this.id = id;
         this.summary = summary;
         this.description = description;
@@ -22,7 +21,7 @@ public class Todo {
     }
 
     public Todo () {
-        this.id = new Random().nextLong();
+        this.id = new Random().nextInt(1000000);
         this.summary = "";
         this.description = "";
     }
@@ -30,7 +29,7 @@ public class Todo {
     /**
      * ID might be null!
      */
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 

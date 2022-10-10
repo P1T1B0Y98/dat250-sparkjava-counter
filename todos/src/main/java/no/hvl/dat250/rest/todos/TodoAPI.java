@@ -1,7 +1,7 @@
 package no.hvl.dat250.rest.todos;
 
 import static spark.Spark.*;
-
+import java.util.HashMap;
 import com.google.gson.Gson;
 /**
  * Rest-Endpoint.
@@ -18,6 +18,8 @@ import static spark.Spark.delete;
  * Hello world!
  */
 import com.google.gson.Gson;
+import spark.Spark;
+
 import static spark.Spark.*;
 
 public class TodoAPI {
@@ -30,14 +32,39 @@ public class TodoAPI {
         else
             port(8080);
 
+        options("/*",
+                (request, response) -> {
+
+                    String accessControlRequestHeaders = request
+                            .headers("Access-Control-Request-Headers");
+                    if (accessControlRequestHeaders != null) {
+                        response.header("Access-Control-Allow-Headers",
+                                accessControlRequestHeaders);
+                    }
+
+                    String accessControlRequestMethod = request
+                            .headers("Access-Control-Request-Method");
+                    if (accessControlRequestMethod != null) {
+                        response.header("Access-Control-Allow-Methods",
+                                accessControlRequestMethod);
+                    }
+
+                    return "OK";
+                });
+
+        before((req, res) -> res.header("Access-Control-Allow-Origin", "*"));
+
         after((req, res) -> {
             res.type("application/json");
+            res.header("Access-Control-Allow-Methods", "GET,POST,DELETE,OPTIONS");
+            res.header("Access-Control-Allow-Headers", "Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin,");
+            res.header("Access-Control-Allow-Credentials", "true");
         });
 
         get("/todos", (req, res) -> new Gson().toJsonTree(todolist.getTodos()));
         get("/todos/:id", (req, res) -> {
             try {
-                Long.parseLong((req.params(":id")));
+                Integer.parseInt((req.params(":id")));
                 Todo todo = todolist.getTodo(req.params(":id"));
                 if (todo != null)
                     return new Gson().toJson(todo);
@@ -51,7 +78,7 @@ public class TodoAPI {
                 ;
         delete("/todos/:id", (req, res) -> {
             try {
-                Long.parseLong((req.params(":id")));
+                Integer.parseInt((req.params(":id")));
                 Todo todo = todolist.getTodo(req.params(":id"));
                 todolist.deleteTodo(todo.getId());
                 if (todo != null)
@@ -70,7 +97,7 @@ public class TodoAPI {
         });
         put("/todos/:id", (req, res) -> {
             try {
-                Long.parseLong((req.params(":id")));
+                Integer.parseInt((req.params(":id")));
                 Todo oldTodo = todolist.getTodo(req.params(":id"));
                 Todo newTodo = new Gson().fromJson(req.body(), Todo.class);
                 todolist.deleteTodo(oldTodo.getId());

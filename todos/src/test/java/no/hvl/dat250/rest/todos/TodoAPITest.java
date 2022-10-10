@@ -119,7 +119,7 @@ public class TodoAPITest {
     /**
      * Gets the todo with the given id.
      */
-    private String doGetRequest(Long todoId) {
+    private String doGetRequest(int todoId) {
         return this.doGetRequest(BASE_URL + "todos/" + todoId);
     }
 
@@ -186,7 +186,7 @@ public class TodoAPITest {
         assertThat(todosBeforeDelete.size() - 1, is(todosAfterDelete.size()));
     }
 
-    private void doDeleteRequest(Long todoId) {
+    private void doDeleteRequest(int todoId) {
         Request request = new Request.Builder()
                 .url(BASE_URL + "todos/" + todoId)
                 .delete()
@@ -197,7 +197,7 @@ public class TodoAPITest {
 
     @Test
     public void testNonExistingTodo() {
-        final long todoId = 9999L;
+        final int todoId = 9999;
         // Execute get request
         final String result = doGetRequest(todoId);
 
